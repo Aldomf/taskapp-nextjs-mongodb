@@ -15,7 +15,6 @@ function FormPage() {
   const router = useRouter();
   const params = useParams();
   const [inputValue, setInputValue] = useState("");
-  const notify = () => toast('Here is your toast.');
 
   const getTask = async () => {
     const res = await fetch(`/api/tasks/${params.id}`);
