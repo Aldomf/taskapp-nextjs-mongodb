@@ -26,6 +26,7 @@ export async function GET(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
+  connectDB()
   try {
     const deletedTask = await Task.findByIdAndDelete(params.id);
     if (!deletedTask)
@@ -47,12 +48,14 @@ export async function DELETE(req, { params }) {
 }
 
 export async function PUT(req, { params }) {
+  connectDB()
   try {
     const data = await req.json();
     const updatedTask = await Task.findByIdAndUpdate(params.id, data, {
       new: true,
     });
-    return NextResponse.json(updatedTask);
+    const updatedTaskSaved = updatedTask.save()
+    return NextResponse.json(updatedTaskSaved);
   } catch (error) {
     return NextResponse.json(error.message, {
       status: 400,
