@@ -9,16 +9,21 @@ function HomePage() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const getTasks = () => {
     axios
       .get("/api/tasks")
       .then((response) => {
         setTasks(response.data);
         setLoading(false);
+        
       })
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  useEffect(() => {
+    getTasks()
   }, []);
 
   return (

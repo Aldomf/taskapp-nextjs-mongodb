@@ -1,10 +1,11 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
+import axios from "axios";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const navigation = [
   { name: "My Tasks", href: "/", current: true },
@@ -17,6 +18,21 @@ function classNames(...classes) {
 
 export default function NavBar() {
   const { data: session, status } = useSession();
+  const [tasks, setTasks] = useState();
+
+  const getTasks = async () => {
+    try {
+      const res = await axios.get("/api/tasks");
+      setTasks(res.data.length);
+      console.log(res);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getTasks();
+  }, []);
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -45,7 +61,7 @@ export default function NavBar() {
                     : "flex flex-1 items-center justify-start sm:items-stretch"
                 }
               >
-                <div className="flex flex-shrink-0 items-center">
+                <div className="flex flex-shrink-0 items-center pr-6 sm:pr-0">
                   <Link href="/">
                     <img className="h-8 w-auto" src="/task.png" alt="Logo" />
                   </Link>
@@ -73,15 +89,12 @@ export default function NavBar() {
                 ) : null}
               </div>
               {session ? (
-                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                  <button
-                    type="button"
-                    className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                  >
-                    <span className="absolute -inset-1.5" />
-                    <span className="sr-only">View notifications</span>
-                    <BellIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
+                <div className="absolute inset-y-0 right-0 flex items-center justify-between pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 sm:w-36">
+                  <div className="sm:w-3/5">
+                    <p className="text-[#009FBC] font-semibold">
+                      Tasks: <span className="text-white bg-black px-1 border-2 border-[#009FBC] rounded-full">{tasks}</span>
+                    </p>
+                  </div>
 
                   {/* Profile dropdown */}
                   <Menu as="div" className="relative ml-3">
