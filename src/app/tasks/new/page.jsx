@@ -94,7 +94,7 @@ function FormPage() {
       </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col justify-center items-center xl:w-2/5 h-3/6 lg:h-3/4 w-full"
+        className="flex flex-col justify-center items-center lg:w-2/5 lg:h-3/4 w-full"
       >
         <input
           type="text"
