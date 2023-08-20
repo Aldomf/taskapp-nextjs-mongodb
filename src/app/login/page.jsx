@@ -29,7 +29,7 @@ function LoginPage() {
 
       if (resSignIn.ok) {
         setIsLoading(true);
-        return router.push("/dashboard");
+        return router.push("/");
       }
     } catch (error) {
       console.log(error);

@@ -37,7 +37,7 @@ function RegisterPage() {
         redirect: false,
       });
       console.log(resSignIn);
-      if (resSignIn.ok) return router.push("/dashboard");
+      if (resSignIn.ok) return router.push("/");
     } catch (error) {
       console.log(error);
       setResError(error.response?.data.message);
