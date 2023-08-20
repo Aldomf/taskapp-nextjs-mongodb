@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Oval } from "react-loader-spinner";
 
 function LoginPage() {
   const {
@@ -13,6 +14,7 @@ function LoginPage() {
   } = useForm();
 
   const [resError, setResError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const onSubmit = async (data) => {
@@ -23,10 +25,12 @@ function LoginPage() {
         redirect: false,
       });
 
-      if (resSignIn.error) return setResError(resSignIn.error)
+      if (resSignIn.error) return setResError(resSignIn.error);
 
-      if (resSignIn.ok) return router.push("/dashboard");
-      
+      if (resSignIn.ok) {
+        setIsLoading(true);
+        return router.push("/dashboard");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -62,11 +66,26 @@ function LoginPage() {
         {errors.password && (
           <span className="text-red-600 mb-2">This field is required</span>
         )}
-        <input
+        <button
           type="submit"
-          value="Log in"
-          className="bg-green-600 font-bold hover:bg-green-700 hover:cursor-pointer text-white py-2 rounded-lg w-24"
-        />
+          className="bg-green-600 font-bold hover:bg-green-700 hover:cursor-pointer text-white py-2 rounded-lg w-28 flex justify-center items-center"
+        >
+          {isLoading ? (
+            <Oval
+              height={20}
+              width={20}
+              color="white"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+              ariaLabel="oval-loading"
+              secondaryColor="#ffffff"
+              strokeWidth={7}
+              strokeWidthSecondary={7}
+            />
+          ) : null}
+          {isLoading ? "Loading..." : "Log in"}
+        </button>
       </form>
     </div>
   );

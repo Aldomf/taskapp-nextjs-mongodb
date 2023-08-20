@@ -4,10 +4,20 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import TaskCard from "@/components/TaskCard";
 import Image from "next/image";
+import { Oval } from "react-loader-spinner";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+import { increment, decrement } from "@/redux/features/counter/counterSlice";
+import { useGetTasksQuery } from "@/redux/services/tasksApi";
 
 function HomePage() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const count = useAppSelector((state) => state.counter.value);
+  const dispatch = useAppDispatch();
+
+  const { data, error, isLoading } = useGetTasksQuery();
+  console.log(data);
 
   const getTasks = () => {
     axios
@@ -15,21 +25,34 @@ function HomePage() {
       .then((response) => {
         setTasks(response.data);
         setLoading(false);
-        
       })
       .catch((error) => {
         console.error(error);
       });
-  }
+  };
 
   useEffect(() => {
-    getTasks()
+    getTasks();
   }, []);
 
   return (
     <div className={!tasks.length ? "h-[calc(100vh-15rem)]" : ""}>
       {loading ? (
-        <div>Loading...</div> // Add a loading indicator here if needed
+        <div className="flex justify-center items-center">
+          <Oval
+            height={20}
+            width={20}
+            color="white"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+            ariaLabel="oval-loading"
+            secondaryColor="#ffffff"
+            strokeWidth={7}
+            strokeWidthSecondary={7}
+          />
+          Loading...
+        </div> // Add a loading indicator here if needed
       ) : tasks.length ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 gap-6">
           {tasks.map((task) => (

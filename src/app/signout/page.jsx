@@ -10,7 +10,11 @@ function SignOut() {
         <p>Are you sure you want to sign out?</p>
         <button
           className="bg-red-600 hover:bg-red-700 w-4/5 py-2 rounded-md"
-          onClick={() => signOut()}
+          onClick={() => {
+            if (window.confirm("Are you sure you want to sign out?")) {
+              signOut()
+            }
+          }}
         >
           Sign out
         </button>

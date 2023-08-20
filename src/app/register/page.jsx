@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Oval } from "react-loader-spinner";
 
 function RegisterPage() {
   const {
@@ -14,6 +15,7 @@ function RegisterPage() {
   } = useForm();
 
   const [resError, setResError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const onSubmit = async (data) => {
@@ -25,6 +27,9 @@ function RegisterPage() {
       });
       console.log(res);
       setResError("");
+      if (res.status === 200) {
+        setIsLoading(true);
+      }
 
       const resSignIn = await signIn("credentials", {
         email: data.email,
@@ -33,7 +38,6 @@ function RegisterPage() {
       });
       console.log(resSignIn);
       if (resSignIn.ok) return router.push("/dashboard");
-      
     } catch (error) {
       console.log(error);
       setResError(error.response?.data.message);
@@ -80,11 +84,26 @@ function RegisterPage() {
         {errors.password && (
           <span className="text-red-600 mb-2">This field is required</span>
         )}
-        <input
+        <button
           type="submit"
-          value="Sign up"
-          className="bg-green-600 font-bold hover:bg-green-700 hover:cursor-pointer text-white py-2 rounded-lg w-24"
-        />
+          className="bg-green-600 font-bold hover:bg-green-700 hover:cursor-pointer text-white py-2 rounded-lg w-28 flex justify-center items-center"
+        >
+          {isLoading ? (
+            <Oval
+              height={20}
+              width={20}
+              color="white"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+              ariaLabel="oval-loading"
+              secondaryColor="#ffffff"
+              strokeWidth={7}
+              strokeWidthSecondary={7}
+            />
+          ) : null}
+          {isLoading ? "Loading..." : "Sign up"}
+        </button>
       </form>
     </div>
   );
