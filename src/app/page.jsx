@@ -17,7 +17,6 @@ function HomePage() {
   const dispatch = useAppDispatch();
 
   const { data, error, isLoading } = useGetTasksQuery();
-  console.log(data);
 
   const getTasks = () => {
     axios
@@ -52,7 +51,7 @@ function HomePage() {
             strokeWidthSecondary={7}
           />
           Loading...
-        </div> // Add a loading indicator here if needed
+        </div>
       ) : tasks.length ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 gap-6">
           {tasks.map((task) => (
