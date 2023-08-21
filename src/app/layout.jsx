@@ -3,6 +3,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import Providers from "./Providers";
 import { Providers as ReaduxProvider } from "@/redux/providers";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,6 +20,11 @@ export default function RootLayout({ children }) {
           <body className={inter.className}>
             <NavBar />
             <main className="container mx-auto px-5 mt-4">{children}</main>
+            <ToastContainer
+              position="top-center"
+              autoClose={1000}
+              theme="dark"
+            />
           </body>
         </Providers>
       </ReaduxProvider>

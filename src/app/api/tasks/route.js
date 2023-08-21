@@ -7,11 +7,7 @@ export async function GET() {
 
   const tasks = await Task.find();
 
-  return NextResponse.json(tasks, {
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
+  return NextResponse.json(tasks);
 }
 
 export async function POST(req) {
@@ -20,11 +16,7 @@ export async function POST(req) {
     const data = await req.json();
     const newTask = new Task(data);
     const saveTask = await newTask.save();
-    return NextResponse.json(saveTask, {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
+    return NextResponse.json(saveTask);
   } catch (error) {
     return NextResponse.json(error.message, {
       status: 400,

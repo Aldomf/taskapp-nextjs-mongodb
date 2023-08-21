@@ -5,18 +5,10 @@ import axios from "axios";
 import TaskCard from "@/components/TaskCard";
 import Image from "next/image";
 import { Oval } from "react-loader-spinner";
-import { useAppSelector, useAppDispatch } from "@/redux/hooks";
-import { increment, decrement } from "@/redux/features/counter/counterSlice";
-import { useGetTasksQuery } from "@/redux/services/tasksApi";
 
 function HomePage() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const count = useAppSelector((state) => state.counter.value);
-  const dispatch = useAppDispatch();
-
-  const { data, error, isLoading } = useGetTasksQuery();
 
   const getTasks = () => {
     axios

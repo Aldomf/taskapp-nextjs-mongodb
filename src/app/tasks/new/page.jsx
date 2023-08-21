@@ -3,7 +3,8 @@
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import toast, { Toaster } from 'react-hot-toast';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function FormPage() {
   const {
@@ -35,10 +36,13 @@ function FormPage() {
           throw new Error("Something went wrong");
         }
 
-        const datas = await res.json();
-        router.push("/");
-        router.refresh();
-        console.log(datas);
+        if (res.ok) {
+          const datas = await res.json();
+          toast.success("Create successful!");
+          router.push("/");
+          router.refresh();
+          console.log(datas);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -52,10 +56,14 @@ function FormPage() {
         if (!res.ok) {
           throw new Error("Something went wrong");
         }
-        const datas = await res.json();
-        console.log(datas);
-        router.push("/");
-        router.refresh();
+
+        if (res.ok) {
+          toast.success("Update successful!");
+          const datas = await res.json();
+          console.log(datas);
+          router.push("/");
+          router.refresh();
+        }
       } catch (error) {
         console.log(error);
       }
@@ -71,10 +79,14 @@ function FormPage() {
         if (!res.ok) {
           throw new Error("Something went wrong");
         }
-        const datas = await res.json();
-        router.push("/");
-        router.refresh();
-        console.log(datas);
+
+        if (res.ok) {
+          const datas = await res.json();
+          toast.success("Delete successful!");
+          router.push("/");
+          router.refresh();
+          console.log(datas);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -118,24 +130,22 @@ function FormPage() {
           <span className="text-red-600 mb-2">This field is required</span>
         )}
 
-        <div className={`flex items-center w-full ${params.id ? 'justify-between' : 'justify-center'}`}>
+        <div
+          className={`flex items-center w-full ${
+            params.id ? "justify-between" : "justify-center"
+          }`}
+        >
           <input
             type="submit"
             value={params.id ? "Update" : "Save"}
             className="bg-green-600 font-bold hover:bg-green-700 hover:cursor-pointer text-white py-2 rounded-lg w-24"
-            onClick={() => toast.success(params.id ? "Update Successful" : "Save Successful")}
           />
-          <Toaster />
           {params.id && (
             <button
               type="button"
               className="bg-red-600 font-bold hover:bg-red-700 hover:cursor-pointer text-white py-2 rounded-lg w-24"
               onClick={() => {
-                toast.promise(handleDelete(), {
-                  loading: 'Deleting...',
-                  success: 'Delete Successful',
-                  error: 'Delete Failed',
-                });
+                handleDelete();
               }}
             >
               Delete
