@@ -36,7 +36,7 @@ function ProfilePage() {
               alt="profile photo"
               className="border-2 rounded-full"
             />
-            <p className="mt-2">You have <span className="font-bold text-[#009FBC]">{tasks}</span> tasks</p>
+            <p className="mt-2">You have <span className="font-bold text-[#009FBC]">{tasks}</span> {tasks > 1 ? "tasks" : "task"}</p>
           </div>
           <div>
             <p className="text-white border-b border-gray-600 pb-4">
