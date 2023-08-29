@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Oval } from "react-loader-spinner";
+import { useAuth } from "@/context/AuthContext";
 
 function LoginPage() {
   const {
@@ -13,27 +11,10 @@ function LoginPage() {
     formState: { errors },
   } = useForm();
 
-  const [resError, setResError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const { signin, isLoading, resError } = useAuth();
 
   const onSubmit = async (data) => {
-    try {
-      const resSignIn = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-      });
-
-      if (resSignIn.error) return setResError(resSignIn.error);
-
-      if (resSignIn.ok) {
-        setIsLoading(true);
-        return router.push("/");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    signin(data);
   };
 
   return (

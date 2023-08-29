@@ -1,8 +1,14 @@
 "use client"
 
-import { signOut } from "next-auth/react";
+import { useAuth } from "@/context/AuthContext";
 
 function SignOut() {
+  const {signout} = useAuth()
+
+  const signOut = async() => {
+    signout()
+  }
+
   return (
     <div className="flex justify-center items-center h-[calc(100vh-10rem)]">
       <div className="flex flex-col justify-around items-center h-60 md:w-1/2 lg:w-1/3 w-full bg-gray-800 rounded-lg">

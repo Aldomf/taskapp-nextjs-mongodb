@@ -1,11 +1,10 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
-import axios from "axios";
+import { Fragment } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useAuth } from "@/context/AuthContext";
 
 const navigation = [
   { name: "My Tasks", href: "/", current: true },
@@ -17,22 +16,9 @@ function classNames(...classes) {
 }
 
 export default function NavBar() {
-  const { data: session, status } = useSession();
-  // const [tasks, setTasks] = useState();
+  const { isAuthenticated } = useAuth();
 
-  // const getTasks = async () => {
-  //   try {
-  //     const res = await axios.get("/api/tasks");
-  //     setTasks(res.data.length);
-  //     console.log(res);
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getTasks();
-  // }, []);
+  console.log(isAuthenticated);
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -42,7 +28,7 @@ export default function NavBar() {
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
-                {session ? (
+                {isAuthenticated ? (
                   <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                     <span className="absolute -inset-0.5" />
                     <span className="sr-only">Open main menu</span>
@@ -56,17 +42,17 @@ export default function NavBar() {
               </div>
               <div
                 className={
-                  session
+                  isAuthenticated
                     ? "flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"
                     : "flex flex-1 items-center justify-start sm:items-stretch"
                 }
               >
                 <div className="flex flex-shrink-0 items-center sm:pr-0">
-                  <Link href="/">
+                  {isAuthenticated ? <Link href="/">
                     <img className="h-8 w-auto" src="/task.png" alt="Logo" />
-                  </Link>
+                  </Link>: <img className="h-8 w-auto" src="/task.png" alt="Logo" />}
                 </div>
-                {session ? (
+                {isAuthenticated ? (
                   <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4">
                       {navigation.map((item) => (
@@ -88,7 +74,7 @@ export default function NavBar() {
                   </div>
                 ) : null}
               </div>
-              {session ? (
+              {isAuthenticated ? (
                 <div className="absolute inset-y-0 right-0 flex items-center justify-end sm:static sm:inset-auto">
                   {/*<div className="sm:w-3/5">
                     <p className="text-[#009FBC] font-semibold">

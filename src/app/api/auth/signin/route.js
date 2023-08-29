@@ -6,40 +6,20 @@ import { createAccessToken } from "@/libs/jwt";
 import { serialize } from "cookie";
 
 export async function POST(request) {
-  const { fullname, email, password } = await request.json();
-  console.log(fullname, email, password);
-
-  if (!password || password.length < 6)
-    return NextResponse.json(
-      {
-        message: "Password must be at least 6 characters",
-      },
-      {
-        status: 400,
-      }
-    );
+  const { email, password } = await request.json();
+  console.log(email, password);
 
   try {
     await connectDB();
-    const userFound = await User.findOne({ email });
 
-    if (userFound)
-      return NextResponse.json(
-        { message: "Email already exists" },
-        { status: 409 }
-      );
+    const userFound = await User.findOne({ email }).select("+password");
+    if (!userFound) throw new Error("Invalid credentials");
+    console.log(userFound);
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const passwordMatch = await bcrypt.compare(password, userFound.password);
+    if (!passwordMatch) throw new Error("Invalid credentials");
 
-    const user = new User({
-      email,
-      fullname,
-      password: hashedPassword,
-    });
-
-    const savedUser = await user.save();
-    console.log(savedUser);
-    const token = await createAccessToken({ id: savedUser._id });
+    const token = await createAccessToken({ id: userFound._id });
 
     const serialized = serialize("myTokenName", token, {
       httpOnly: true,
@@ -51,8 +31,8 @@ export async function POST(request) {
 
     const response = {
       message: "Authenticated",
-      email: savedUser.email,
-      fullname: savedUser.fullname,
+      email: userFound.email,
+      fullname: userFound.fullname,
     };
     return new Response(JSON.stringify(response), {
       status: 200,

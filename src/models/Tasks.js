@@ -13,6 +13,11 @@ const taskSchema = new Schema(
       required: [true, "The description is required"],
       trim: true,
     },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    }
   },
   { timestamps: true }
 );

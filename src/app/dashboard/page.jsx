@@ -1,24 +1,21 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
 import { GoMail } from "react-icons/go";
 import { AiOutlineCheckCircle, AiOutlineUser } from "react-icons/ai";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useTasks } from "@/context/TaskContext";
 
 function ProfilePage() {
-  const { data: session, status } = useSession();
+  const { signout, status, } = useAuth();
+  const { getTasksCounter, tasksCounter, } = useTasks();
 
-  const [tasks, setTasks] = useState();
+  const signOut = async () => {
+    signout();
+  };
 
   const getTasks = async () => {
-    try {
-      const res = await axios.get("/api/tasks");
-      setTasks(res.data.length);
-      console.log(res);
-    } catch (error) {
-      console.log(error.message);
-    }
+    getTasksCounter();
   };
 
   useEffect(() => {
@@ -36,19 +33,22 @@ function ProfilePage() {
               alt="profile photo"
               className="border-2 rounded-full"
             />
-            <p className="mt-2">You have <span className="font-bold text-[#009FBC]">{tasks}</span> {tasks > 1 ? "tasks" : "task"}</p>
+            <p className="mt-2">
+              You have <span className="font-bold text-[#009FBC]">{tasksCounter}</span>{" "}
+              {tasksCounter > 1 ? "tasks" : "task"}
+            </p>
           </div>
           <div>
             <p className="text-white border-b border-gray-600 pb-4">
-              <AiOutlineUser className="text-[#009FBC] text-2xl inline mr-5"/>
-              {session?.user.fullname}
+              <AiOutlineUser className="text-[#009FBC] text-2xl inline mr-5" />
+              {/* {session?.user.fullname} */}
             </p>
             <p className="text-white border-b border-gray-600 pb-4 mt-4">
-              <GoMail className="text-[#009FBC] text-2xl inline mr-5"/>
-              {session?.user.email}
+              <GoMail className="text-[#009FBC] text-2xl inline mr-5" />
+              {/* {session?.user.email} */}
             </p>
             <p className="text-green-500 border-b border-gray-600 pb-4 mt-4">
-              <AiOutlineCheckCircle className="text-[#009FBC] text-2xl inline mr-5"/>
+              <AiOutlineCheckCircle className="text-[#009FBC] text-2xl inline mr-5" />
               {status}
             </p>
           </div>

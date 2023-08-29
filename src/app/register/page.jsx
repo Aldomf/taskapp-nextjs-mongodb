@@ -1,11 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Oval } from "react-loader-spinner";
+import { useAuth } from "@/context/AuthContext";
 
 function RegisterPage() {
   const {
@@ -14,34 +11,10 @@ function RegisterPage() {
     formState: { errors },
   } = useForm();
 
-  const [resError, setResError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const {signup, isLoading, resError} = useAuth()
 
   const onSubmit = async (data) => {
-    try {
-      const res = await axios.post("/api/auth/signup", {
-        fullname: data.fullname,
-        email: data.email,
-        password: data.password,
-      });
-      console.log(res);
-      setResError("");
-      if (res.status === 200) {
-        setIsLoading(true);
-      }
-
-      const resSignIn = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-      });
-      console.log(resSignIn);
-      if (resSignIn.ok) return router.push("/");
-    } catch (error) {
-      console.log(error);
-      setResError(error.response?.data.message);
-    }
+    signup(data)
   };
 
   return (

@@ -3,6 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/models/Users";
 import { connectDB } from "@/utils/mongoose";
 import bcrypt from "bcryptjs";
+import { createAccessToken } from "@/libs/jwt";
+import { serialize } from "cookie";
 
 const handler = NextAuth({
   providers: [
@@ -32,6 +34,22 @@ const handler = NextAuth({
         );
         if (!passwordMatch) throw new Error("Invalid credentials");
 
+        const token = await createAccessToken({ id: userFound._id });
+
+        const serialized = serialize("myTokenName", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: 1000 * 60 * 60 * 30,
+          path: "/",
+        });
+
+        const response = { message: "Authenticated!" };
+        return new Response(JSON.stringify(response), {
+          status: 200,
+          headers: { "Set-Cookie": serialized },
+        });
+
         return userFound;
       },
     }),
@@ -49,9 +67,8 @@ const handler = NextAuth({
   },
 
   pages: {
-    signIn: "/login"
-  }
-
+    signIn: "/login",
+  },
 });
 
 export { handler as GET, handler as POST };

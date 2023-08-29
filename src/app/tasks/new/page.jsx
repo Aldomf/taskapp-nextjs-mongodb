@@ -2,9 +2,8 @@
 
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useParams } from "next/navigation";
+import { useTasks } from "@/context/TaskContext";
 
 function FormPage() {
   const {
@@ -13,7 +12,8 @@ function FormPage() {
     formState: { errors },
   } = useForm();
 
-  const router = useRouter();
+  const { createTask, updateTask, deleteTask } = useTasks();
+
   const params = useParams();
   const [inputValue, setInputValue] = useState("");
 
@@ -25,72 +25,14 @@ function FormPage() {
 
   const onSubmit = async (data) => {
     if (!params.id) {
-      try {
-        const res = await fetch("/api/tasks", {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!res.ok) {
-          throw new Error("Something went wrong");
-        }
-
-        if (res.ok) {
-          const datas = await res.json();
-          toast.success("Create successful!");
-          router.push("/");
-          router.refresh();
-          console.log(datas);
-        }
-      } catch (error) {
-        console.log(error);
-      }
+      createTask(data);
     } else {
-      try {
-        const res = await fetch(`/api/tasks/${params.id}`, {
-          method: "PUT",
-          body: JSON.stringify(data),
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!res.ok) {
-          throw new Error("Something went wrong");
-        }
-
-        if (res.ok) {
-          toast.success("Update successful!");
-          const datas = await res.json();
-          console.log(datas);
-          router.push("/");
-          router.refresh();
-        }
-      } catch (error) {
-        console.log(error);
-      }
+      updateTask(data);
     }
   };
 
   async function handleDelete() {
-    if (window.confirm("Are you sure you want to delete this task?")) {
-      try {
-        const res = await fetch(`/api/tasks/${params.id}`, {
-          method: "DELETE",
-        });
-        if (!res.ok) {
-          throw new Error("Something went wrong");
-        }
-
-        if (res.ok) {
-          const datas = await res.json();
-          toast.success("Delete successful!");
-          router.push("/");
-          router.refresh();
-          console.log(datas);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    deleteTask();
   }
 
   useEffect(() => {

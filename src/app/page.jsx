@@ -1,25 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
 import TaskCard from "@/components/TaskCard";
 import Image from "next/image";
 import { Oval } from "react-loader-spinner";
+import { useTasks } from "@/context/TaskContext";
 
 function HomePage() {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const {getTasksHome, loading, tasks} = useTasks()
 
   const getTasks = () => {
-    axios
-      .get("/api/tasks")
-      .then((response) => {
-        setTasks(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    getTasksHome()
   };
 
   useEffect(() => {
