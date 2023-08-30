@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import Jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
 export function middleware(req) {
   const myTokenName = req.cookies.get("myTokenName");
@@ -7,12 +7,15 @@ export function middleware(req) {
   if (!myTokenName)
   return NextResponse.redirect(new URL("/login", req.url));
 
-  Jwt.verify(myTokenName, "yoursecret", (err, user) => {
-    if (err)
-      return NextResponse.json({ message: "Invalid token" }, { status: 403 });
-
-    req.user = user;
-  });
+  try {
+    const { payload } = jwtVerify(
+      myTokenName,
+      new TextEncoder().encode("yoursecret")
+    );
+    console.log(payload)
+  } catch (error) {
+    return NextResponse.json({ message: "Invalid token" }, { status: 403 });
+  }
 }
 
 export const config = {
