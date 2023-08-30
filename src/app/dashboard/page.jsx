@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useTasks } from "@/context/TaskContext";
 
 function ProfilePage() {
-  const { signout, status, } = useAuth();
+  const { signout, status, fullname, email } = useAuth();
   const { getTasksCounter, tasksCounter, } = useTasks();
 
   const signOut = async () => {
@@ -41,11 +41,11 @@ function ProfilePage() {
           <div>
             <p className="text-white border-b border-gray-600 pb-4">
               <AiOutlineUser className="text-[#009FBC] text-2xl inline mr-5" />
-              {/* {session?.user.fullname} */}
+              {fullname}
             </p>
             <p className="text-white border-b border-gray-600 pb-4 mt-4">
               <GoMail className="text-[#009FBC] text-2xl inline mr-5" />
-              {/* {session?.user.email} */}
+              {email}
             </p>
             <p className="text-green-500 border-b border-gray-600 pb-4 mt-4">
               <AiOutlineCheckCircle className="text-[#009FBC] text-2xl inline mr-5" />

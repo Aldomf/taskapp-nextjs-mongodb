@@ -19,7 +19,7 @@ export async function GET(req) {
 
   const tasks = await Task.find({ user: req.user.id }).populate("user");
 
-  console.log(tasks)
+  console.log(tasks);
 
   return NextResponse.json(tasks);
 }
@@ -37,14 +37,30 @@ export async function POST(req) {
   try {
     connectDB();
     const { title, description } = await req.json();
+    const taskFound = await Task.findOne({ title, user: req.user.id });
+    if (taskFound)
+      return NextResponse.json(
+        {
+          message: "Title already exists",
+        },
+        {
+          status: 400,
+        }
+      );
+
     const newTask = new Task({ title, description, user: req.user.id });
     console.log(newTask);
     const saveTask = await newTask.save();
     return NextResponse.json(saveTask);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(error.message, {
-      status: 400,
-    });
+    return NextResponse.json(
+      {
+        message: error.message,
+      },
+      {
+        status: 400,
+      }
+    );
   }
 }

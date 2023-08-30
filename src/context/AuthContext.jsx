@@ -16,6 +16,8 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [status, setStatus] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [resError, setResError] = useState("");
@@ -33,8 +35,16 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Checking local storage for previous authentication status
     const storedStatus = localStorage.getItem("status");
+    const storedFullname = localStorage.getItem("fullname");
+    const storedEmail = localStorage.getItem("email");
     if (storedStatus) {
       setStatus(JSON.parse(storedStatus));
+    }
+    if (storedFullname) {
+      setFullname(JSON.parse(storedFullname));
+    }
+    if (storedEmail) {
+      setEmail(JSON.parse(storedEmail));
     }
   }, []);
 
@@ -49,16 +59,22 @@ export const AuthProvider = ({ children }) => {
       if (res.error) return setResError(res.error);
 
       if (res.status === 200) {
+        setResError("")
         setIsAuthenticated(true);
         setIsLoading(true);
         // Saving authentication status to local storage
         localStorage.setItem("isAuthenticated", JSON.stringify(true));
         setStatus(res.data.message)
         localStorage.setItem("status", JSON.stringify(res.data.message));
+        setFullname(res.data.fullname)
+        localStorage.setItem("fullname", JSON.stringify(res.data.fullname));
+        setEmail(res.data.email);
+        localStorage.setItem("email", JSON.stringify(res.data.email));
         return router.push("/");
       }
     } catch (error) {
       console.log(error);
+      setResError(error.response?.data.message);
     }
   };
 
@@ -70,14 +86,18 @@ export const AuthProvider = ({ children }) => {
         password: user.password,
       });
       console.log(res);
-      setResError("");
       if (res.status === 200) {
+        setResError("");
         setIsAuthenticated(true);
         setIsLoading(true);
         // Saving authentication status to local storage
         localStorage.setItem("isAuthenticated", JSON.stringify(true));
         setStatus(res.data.message)
-        localStorage.setItem("user", JSON.stringify(res.data.message));
+        localStorage.setItem("status", JSON.stringify(res.data.message));
+        setFullname(res.data.fullname)
+        localStorage.setItem("fullname", JSON.stringify(res.data.fullname));
+        setEmail(res.data.email);
+        localStorage.setItem("email", JSON.stringify(res.data.email));
         return router.push("/");
       }
     } catch (error) {
@@ -98,25 +118,14 @@ export const AuthProvider = ({ children }) => {
     // Removing authentication status from local storage
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("status");
+    localStorage.removeItem("fullname");
+    localStorage.removeItem("email");
     router.push("/login");
   };
 
-  useEffect(() => {
-    const verifyToken = async (req) => {
-      // const myTokenName = req.cookies.get("myTokenName");
-      try {
-        const res = await axios.get("api/auth/verifyToken");
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    verifyToken()
-  })
-
   return (
     <AuthContext.Provider
-      value={{ signin, signup, signout, resError, isLoading, isAuthenticated, status }}
+      value={{ signin, signup, signout, resError, isLoading, isAuthenticated, status, fullname, email }}
     >
       {children}
     </AuthContext.Provider>

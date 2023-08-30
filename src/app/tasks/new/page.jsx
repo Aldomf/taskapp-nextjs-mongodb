@@ -12,7 +12,7 @@ function FormPage() {
     formState: { errors },
   } = useForm();
 
-  const { createTask, updateTask, deleteTask } = useTasks();
+  const { createTask, updateTask, deleteTask, error } = useTasks();
 
   const params = useParams();
   const [inputValue, setInputValue] = useState("");
@@ -46,9 +46,12 @@ function FormPage() {
       <h1 className="text-white font-bold text-4xl">
         {params.id ? "Update Task" : "Create Task"}
       </h1>
+      {error && (
+        <span className="text-red-600 text-sm md:text-base">{error}</span>
+      )}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col justify-center items-center lg:w-2/5 lg:h-3/4 w-full"
+        className="flex flex-col justify-center items-center lg:w-2/5 lg:h-[400px] w-full"
       >
         <input
           type="text"

@@ -23,6 +23,7 @@ export const TaskProvider = ({ children }) => {
 
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("")
 
   const getTasksCounter = async () => {
     try {
@@ -48,48 +49,41 @@ export const TaskProvider = ({ children }) => {
 
   const createTask = async (task) => {
     try {
-      const res = await fetch("/api/tasks", {
-        method: "POST",
-        body: JSON.stringify(task),
-        headers: { "Content-Type": "application/json" },
+      const res = await axios.post("/api/tasks", {
+        title: task.title,
+        description: task.description
       });
 
-      if (!res.ok) {
-        throw new Error("Something went wrong");
-      }
+      console.log(res)
 
-      if (res.ok) {
-        const datas = await res.json();
+      if (res.status === 200) {
+        setError("")
         toast.success("Create successful!");
         router.push("/");
         router.refresh();
-        console.log(datas);
       }
     } catch (error) {
       console.log(error);
+      setError(error.response?.data.message);
     }
   };
 
   const updateTask = async (task) => {
     try {
-      const res = await fetch(`/api/tasks/${params.id}`, {
-        method: "PUT",
-        body: JSON.stringify(task),
-        headers: { "Content-Type": "application/json" },
+      const res = await axios.put(`/api/tasks/${params.id}`, {
+        title: task.title,
+        description: task.description
       });
-      if (!res.ok) {
-        throw new Error("Something went wrong");
-      }
 
-      if (res.ok) {
+      if (res.status === 200) {
+        setError("")
         toast.success("Update successful!");
-        const datas = await res.json();
-        console.log(datas);
         router.push("/");
         router.refresh();
       }
     } catch (error) {
       console.log(error);
+      setError(error.response?.data.message);
     }
   };
 
@@ -127,6 +121,7 @@ export const TaskProvider = ({ children }) => {
         tasksCounter,
         tasks,
         loading,
+        error
       }}
     >
       {children}

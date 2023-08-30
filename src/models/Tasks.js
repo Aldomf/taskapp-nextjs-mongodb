@@ -5,7 +5,7 @@ const taskSchema = new Schema(
     title: {
       type: String,
       required: [true, "The title is required"],
-      unique: true,
+      unique: false,
       trim: true,
     },
     description: {
