@@ -1,7 +1,6 @@
 import NavBar from "@/components/NavBar";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import Providers from "./Providers";
 import { Providers as ReaduxProvider } from "@/redux/providers";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "@/context/AuthContext";
@@ -20,7 +19,6 @@ export default function RootLayout({ children }) {
       <ReaduxProvider>
         <AuthProvider>
           <TaskProvider>
-            <Providers>
               <body className={inter.className}>
                 <NavBar />
                 <main className="container mx-auto px-5 mt-4">{children}</main>
@@ -30,7 +28,6 @@ export default function RootLayout({ children }) {
                   theme="dark"
                 />
               </body>
-            </Providers>
           </TaskProvider>
         </AuthProvider>
       </ReaduxProvider>
