@@ -7,7 +7,7 @@ import { serialize } from "cookie";
 
 export async function POST(request) {
   const { fullname, email, password } = await request.json();
-  console.log(fullname, email, password);
+  
 
   if (!password || password.length < 6)
     return NextResponse.json(
@@ -38,7 +38,7 @@ export async function POST(request) {
     });
 
     const savedUser = await user.save();
-    console.log(savedUser);
+    
     const token = await createAccessToken({ id: savedUser._id });
 
     const serialized = serialize("myTokenName", token, {

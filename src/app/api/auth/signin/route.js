@@ -7,14 +7,14 @@ import { serialize } from "cookie";
 
 export async function POST(request) {
   const { email, password } = await request.json();
-  console.log(email, password);
+  
 
   try {
     await connectDB();
 
     const userFound = await User.findOne({ email }).select("+password");
     if (!userFound) throw new Error("Invalid credentials");
-    console.log(userFound);
+    
 
     const passwordMatch = await bcrypt.compare(password, userFound.password);
     if (!passwordMatch) throw new Error("Invalid credentials");

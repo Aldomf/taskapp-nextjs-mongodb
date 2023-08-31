@@ -17,9 +17,8 @@ export async function GET(req) {
     req.user = user;
   });
 
-  const tasks = await Task.find({ user: req.user.id }).populate("user");
+  const tasks = await Task.find({ user: req.user.id });
 
-  console.log(tasks);
 
   return NextResponse.json(tasks);
 }
@@ -49,7 +48,7 @@ export async function POST(req) {
       );
 
     const newTask = new Task({ title, description, user: req.user.id });
-    console.log(newTask);
+   
     const saveTask = await newTask.save();
     return NextResponse.json(saveTask);
   } catch (error) {

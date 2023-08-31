@@ -9,7 +9,7 @@ export function middleware(req) {
 
   try {
     const { payload } = jwtVerify(
-      myTokenName,
+       myTokenName.value,
       new TextEncoder().encode("yoursecret")
     );
     console.log(payload)
