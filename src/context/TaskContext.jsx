@@ -23,7 +23,7 @@ export const TaskProvider = ({ children }) => {
 
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
 
   const getTasksCounter = async () => {
     try {
@@ -51,13 +51,13 @@ export const TaskProvider = ({ children }) => {
     try {
       const res = await axios.post("/api/tasks", {
         title: task.title,
-        description: task.description
+        description: task.description,
       });
 
-      console.log(res)
+      console.log(res);
 
       if (res.status === 200) {
-        setError("")
+        setError("");
         toast.success("Create successful!");
         router.push("/");
         router.refresh();
@@ -72,11 +72,11 @@ export const TaskProvider = ({ children }) => {
     try {
       const res = await axios.put(`/api/tasks/${params.id}`, {
         title: task.title,
-        description: task.description
+        description: task.description,
       });
 
       if (res.status === 200) {
-        setError("")
+        setError("");
         toast.success("Update successful!");
         router.push("/");
         router.refresh();
@@ -110,6 +110,28 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  const deleteTaskHome = async (id) => {
+    if (window.confirm("Are you sure you want to delete this task?")) {
+      try {
+        const res = await fetch(`/api/tasks/${id}`, {
+          method: "DELETE",
+        });
+        if (!res.ok) {
+          throw new Error("Something went wrong");
+        }
+
+        if (res.ok) {
+          const datas = await res.json();
+          setTasks(tasks.filter((task) => task._id !== id));
+          toast.success("Delete successful!");
+          console.log(datas);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <TaskContext.Provider
       value={{
@@ -118,10 +140,11 @@ export const TaskProvider = ({ children }) => {
         createTask,
         updateTask,
         deleteTask,
+        deleteTaskHome,
         tasksCounter,
         tasks,
         loading,
-        error
+        error,
       }}
     >
       {children}
