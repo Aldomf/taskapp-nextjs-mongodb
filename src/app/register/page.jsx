@@ -3,6 +3,8 @@
 import { useForm } from "react-hook-form";
 import { Oval } from "react-loader-spinner";
 import { useAuth } from "@/context/AuthContext";
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function RegisterPage() {
   const {
@@ -12,6 +14,8 @@ function RegisterPage() {
   } = useForm();
 
   const {signup, isLoading, resError} = useAuth()
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data) => {
     signup(data)
@@ -47,13 +51,21 @@ function RegisterPage() {
         {errors.email && (
           <span className="text-red-600">This field is required</span>
         )}
-        <input
-          {...register("password", { required: true })}
-          type="password"
-          placeholder="*******"
-          name="password"
-          className="w-full my-4 bg-gray-800 border-2 rounded-lg p-4"
-        />
+        <div className="relative w-full">
+          <input
+            {...register("password", { required: true })}
+            type={showPassword ? "text" : "password"}
+            placeholder="*******"
+            name="password"
+            className="w-full my-4 bg-gray-800 border-2 rounded-lg p-4 pr-10"
+          />
+          <span
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </span>
+        </div>
         {errors.password && (
           <span className="text-red-600 mb-2">This field is required</span>
         )}
