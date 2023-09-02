@@ -111,7 +111,7 @@ export const TaskProvider = ({ children }) => {
   };
 
   const deleteTaskHome = async (id) => {
-    if (window.confirm("Are you sure you want to delete this task?")) {
+    if (window.confirm("Did you complete this task?")) {
       try {
         const res = await fetch(`/api/tasks/${id}`, {
           method: "DELETE",
@@ -123,7 +123,7 @@ export const TaskProvider = ({ children }) => {
         if (res.ok) {
           const datas = await res.json();
           setTasks(tasks.filter((task) => task._id !== id));
-          toast.success("Delete successful!");
+          toast.success("Task Completed!");
           console.log(datas);
         }
       } catch (error) {

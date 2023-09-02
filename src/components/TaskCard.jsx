@@ -17,14 +17,14 @@ function TaskCard({ task }) {
         </div>
         <div className="w-full sm:flex sm:justify-end">
           <button
-            className="bg-red-600 py-2 px-4 rounded-lg hover:bg-red-700 sm:w-20 w-full"
+            className="bg-green-600 py-2 px-4 rounded-lg hover:bg-green-800 sm:w-28 w-full"
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
               deleteTaskHome(task._id);
             }}
           >
-            Delete
+            Completed
           </button>
         </div>
       </div>
