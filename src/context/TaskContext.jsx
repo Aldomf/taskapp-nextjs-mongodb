@@ -58,7 +58,7 @@ export const TaskProvider = ({ children }) => {
 
       if (res.status === 200) {
         setError("");
-        toast.success("Create successful!");
+        toast.success("Successfully created!");
         router.push("/");
         router.refresh();
       }
@@ -77,7 +77,7 @@ export const TaskProvider = ({ children }) => {
 
       if (res.status === 200) {
         setError("");
-        toast.success("Update successful!");
+        toast.success("Successfully updated!");
         router.push("/");
         router.refresh();
       }
@@ -99,7 +99,7 @@ export const TaskProvider = ({ children }) => {
 
         if (res.ok) {
           const datas = await res.json();
-          toast.success("Delete successful!");
+          toast.success("Successfully deleted!");
           router.push("/");
           router.refresh();
           console.log(datas);
